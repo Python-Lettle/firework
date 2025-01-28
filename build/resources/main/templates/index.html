@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>烟花广场</title>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/messages.css}">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        html {
+            height: 100%;
+            width: 100%;
+        }
+        body {
+            height: 100%;
+            width: 100%;
+            background: #000;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        canvas {
+            cursor: crosshair;
+            display: block;
+        }
+    </style>
+
+
+</head>
+
+<body>
+    <div class="msgContainer" id="messageContainer">
+        <img class="msgBtn" id="mini" th:src="@{/fonts/right.svg}" alt="" />
+        <div class="messagebox" id="messageBox"></div>
+        <img class="msgBtn" id="messageBtn" th:src="@{/fonts/left.svg}"  alt=""/>
+    </div>
+    <input class="unameInput" id="username">
+    <button id="submitName">更改</button>
+    <canvas id="canvas">Canvas is not supported in your browser.</canvas>
+</body>
+
+<script th:src="@{/js/jquery-3.7.1.min.js}"></script>
+<script>
+    // 在画布上设置动画时，最好使用requestAnimationFrame，而不是setTimeout或setInterval
+    // 不是所有浏览器都支持，有时需要前缀，所以我们需要一个填充程序
+    window.requestAnimFrame = ( function() {
+        return window.requestAnimationFrame ||
+            window.webkitRequestAnimationFrame ||
+            window.mozRequestAnimationFrame ||
+            function( callback ) {
+                window.setTimeout( callback, 1000 / 60 );
+            };
+    })();
+
+    // 设置基本变量
+    var canvas = document.getElementById( 'canvas' ),
+        ctx = canvas.getContext( '2d' ),
+        // 全屏尺寸
+        cw = window.innerWidth,
+        ch = window.innerHeight,
+        // 烟花
+        fireworks = [],
+        // 颗粒
+        particles = [],
+        // 起始色调
+        hue = 120,
+        // 当点击发射烟花时，太多的烟花在没有限制的情况下一次发射
+        limiterTotal = 20,
+        limiterTick = 0,
+        // 这将为烟花的自动发射计时，每80个循环周期发射一次
+        timerTotal = 80,
+        timerTick = 0,
+        mousedown = false,
+        // mouse x
+        mx,
+        // mouse y
+        my;
+
+    // 设置画布尺寸
+    canvas.width = cw-1;
+    canvas.height = ch-1;
+
+    // 函数
+
+    // 获取一个范围内的随机数
+    function random( min, max ) {
+        return Math.random() * ( max - min ) + min;
+    }
+
+    // 计算两点之间的距离
+    function calculateDistance( p1x, p1y, p2x, p2y ) {
+        var xDistance = p1x - p2x,
+            yDistance = p1y - p2y;
+        return Math.sqrt( Math.pow( xDistance, 2 ) + Math.pow( yDistance, 2 ) );
+    }
+</script>
+<script th:src="@{/js/userInfo.js}"></script>
+<script th:src="@{/js/messages.js}"></script>
+<script th:src="@{/js/game.js}"></script>
+
+
